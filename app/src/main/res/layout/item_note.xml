@@ -23,7 +23,7 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/tv_item_note"
+                android:id="@+id/tv_item_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
