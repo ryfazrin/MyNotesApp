@@ -2,10 +2,12 @@ package com.ryfazrin.mynotesapp.ui.insert
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.ryfazrin.mynotesapp.R
 import com.ryfazrin.mynotesapp.database.Note
 import com.ryfazrin.mynotesapp.databinding.ActivityNoteAddUpdateBinding
+import com.ryfazrin.mynotesapp.helper.DateHelper
 import com.ryfazrin.mynotesapp.helper.ViewModelFactory
 
 class NoteAddUpdateActivity : AppCompatActivity() {
@@ -46,9 +48,9 @@ class NoteAddUpdateActivity : AppCompatActivity() {
             actionBarTitle = getString(R.string.change)
             btnTitle = getString(R.string.update)
             if (note != null) {
-                note?.let {
-                    binding?.edtTitle?.setText(it.title)
-                    binding?.edtDescription?.setText(it.description)
+                note?.let { note ->
+                    binding?.edtTitle?.setText(note.title)
+                    binding?.edtDescription?.setText(note.description)
                 }
             }
         } else {
@@ -60,6 +62,40 @@ class NoteAddUpdateActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding?.btnSubmit?.text = btnTitle
+
+        binding?.btnSubmit?.setOnClickListener {
+            val title = binding?.edtTitle?.text.toString().trim()
+            val description = binding?.edtDescription?.text.toString().trim()
+            when {
+                title.isEmpty() -> {
+                    binding?.edtTitle?.error = getString(R.string.empty)
+                }
+                description.isEmpty() -> {
+                    binding?.edtDescription?.error = getString(R.string.empty)
+                }
+                else -> {
+                    note.let { note ->
+                        note?.title = title
+                        note?.description = description
+                    }
+                    if (isEdit) {
+                        noteAddUpdateViewModel.update(note as Note)
+                        showToast(getString(R.string.changed))
+                    } else {
+                        note.let { note ->
+                            note?.date = DateHelper.getCurrentDate()
+                        }
+                        noteAddUpdateViewModel.insert(note as Note)
+                        showToast(getString(R.string.added))
+                    }
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
