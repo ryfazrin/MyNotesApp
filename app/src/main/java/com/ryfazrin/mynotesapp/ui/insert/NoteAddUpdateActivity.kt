@@ -31,6 +31,35 @@ class NoteAddUpdateActivity : AppCompatActivity() {
         setContentView(binding?.root)
 
         noteAddUpdateViewModel = obtainViewModel(this@NoteAddUpdateActivity)
+
+        note = intent.getParcelableExtra(EXTRA_NOTE)
+        if (note != null) {
+            isEdit = true
+        } else {
+            note = Note()
+        }
+
+        val actionBarTitle: String
+        val btnTitle: String
+
+        if (isEdit) {
+            actionBarTitle = getString(R.string.change)
+            btnTitle = getString(R.string.update)
+            if (note != null) {
+                note?.let {
+                    binding?.edtTitle?.setText(it.title)
+                    binding?.edtDescription?.setText(it.description)
+                }
+            }
+        } else {
+            actionBarTitle = getString(R.string.add)
+            btnTitle = getString(R.string.save)
+        }
+
+        supportActionBar?.title = actionBarTitle
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding?.btnSubmit?.text = btnTitle
     }
 
     override fun onDestroy() {
