@@ -1,5 +1,6 @@
 package com.ryfazrin.mynotesapp.ui.main
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ryfazrin.mynotesapp.R
 import com.ryfazrin.mynotesapp.databinding.ActivityMainBinding
 import com.ryfazrin.mynotesapp.helper.ViewModelFactory
+import com.ryfazrin.mynotesapp.ui.insert.NoteAddUpdateActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +35,13 @@ class MainActivity : AppCompatActivity() {
         binding?.rvNotes?.layoutManager = LinearLayoutManager(this)
         binding?.rvNotes?.setHasFixedSize(true)
         binding?.rvNotes?.adapter = adapter
+
+        binding?.fabAdd?.setOnClickListener { view ->
+            if (view.id == R.id.fab_add) {
+                val intent = Intent(this@MainActivity, NoteAddUpdateActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun obtainViewModel(activity: AppCompatActivity): MainViewModel {
