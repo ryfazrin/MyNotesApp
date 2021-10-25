@@ -2,8 +2,11 @@ package com.ryfazrin.mynotesapp.ui.insert
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.ryfazrin.mynotesapp.R
 import com.ryfazrin.mynotesapp.database.Note
+import com.ryfazrin.mynotesapp.databinding.ActivityNoteAddUpdateBinding
+import com.ryfazrin.mynotesapp.helper.ViewModelFactory
 
 class NoteAddUpdateActivity : AppCompatActivity() {
 
@@ -16,8 +19,27 @@ class NoteAddUpdateActivity : AppCompatActivity() {
     private var isEdit = false
     private var note: Note? = null
 
+    private lateinit var noteAddUpdateViewModel: NoteAddUpdateViewModel
+
+    private var _activityNoteAddUpdateBinding: ActivityNoteAddUpdateBinding? = null
+    private val binding get() = _activityNoteAddUpdateBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note_add_update)
+
+        _activityNoteAddUpdateBinding = ActivityNoteAddUpdateBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
+
+        noteAddUpdateViewModel = obtainViewModel(this@NoteAddUpdateActivity)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _activityNoteAddUpdateBinding = null
+    }
+
+    private fun obtainViewModel(activity: AppCompatActivity): NoteAddUpdateViewModel {
+        val factory = ViewModelFactory.getInstance(activity.application)
+        return ViewModelProvider(activity, factory).get(NoteAddUpdateViewModel::class.java)
     }
 }
